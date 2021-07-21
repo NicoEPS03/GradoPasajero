@@ -183,9 +183,6 @@ class _RegistroState extends State<Registro> {
                         ),
                         hintText: "Confirmar Contraseña",
                         labelText: "Confirmar Contraseña",
-                        labelStyle: TextStyle(
-                          color: KSecundaryColor,
-                        ),
                       ),
                     ),
                   ),
@@ -210,19 +207,9 @@ class _RegistroState extends State<Registro> {
                 ],
               ),
             ),
-            Positioned(
-                bottom: 0,
-                left: 0,
-                child: Image.asset(
-                  "assets/images/main_bottom.png",
-                  width: size.width * 0.2,
-                )
-            )
           ],
         ),
       ),
     );
   }
 }
-
-//prueba aaa
