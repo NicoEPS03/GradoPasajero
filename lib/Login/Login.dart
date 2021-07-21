@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:proyecto_grado_pasajero/Login/Inicio.dart';
 import 'package:proyecto_grado_pasajero/Login/Registro.dart';
 import '../constants.dart';
 
@@ -96,7 +97,7 @@ class _LoginState extends State<Login> {
                         padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
                         color: kPrimaryColor,
                         onPressed: () {
-
+                          Navigator.push(context, MaterialPageRoute(builder: (context){return Inicio();}) );
                         },
                         child: Text(
                           "Ingresar",
