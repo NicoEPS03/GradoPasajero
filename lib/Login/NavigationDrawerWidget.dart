@@ -10,7 +10,7 @@ class NavigationDrawerWidget extends StatelessWidget{
   @override
   Widget build (BuildContext context) => Drawer(
     child: Container(
-      color: KSecundaryColor,
+      color: kPrimaryColor,
       child: ListView(
         children: <Widget>[
           Container(
@@ -74,15 +74,15 @@ class NavigationDrawerWidget extends StatelessWidget{
   Widget buildMenuItem(BuildContext context, {required NavigationItem item, required String text,required IconData icon}) {
     final provider = Provider.of<NavigationProvider>(context);
     final currentItem = provider.navigationItem;
-    final isSelected = item == currentItem;
+    //final isSelected = item == currentItem;
 
     final color = Colors.white;
 
     return Material(
       color: Colors.transparent,
       child: ListTile(
-        selected: isSelected,
-        selectedTileColor: Colors.white24,
+        //selected: isSelected,
+        //selectedTileColor: Colors.white24,
         leading: Icon(icon, color: color),
         title: Text(text, style: TextStyle(color: color, fontSize: 16)),
         onTap: () => selectItem(context, item),
