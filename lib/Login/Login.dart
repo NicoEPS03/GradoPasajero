@@ -48,7 +48,7 @@ class _LoginState extends State<Login> {
                       decoration: InputDecoration(
                         icon: Icon(
                           Icons.person,
-                          color: kPrimaryColor,
+                          color: KPrimaryColorLogin,
                         ),
                         hintText: "E-mail",
                         border: InputBorder.none,
@@ -65,17 +65,17 @@ class _LoginState extends State<Login> {
                     ),
                     child: TextFormField(
                       obscureText: !this.visibility,
-                      cursorColor: kPrimaryColor,
+                      cursorColor: KPrimaryColorLogin,
                       decoration: InputDecoration(
                         hintText: "Contraseña",
                         icon: Icon(
                           Icons.lock,
-                          color: kPrimaryColor,
+                          color: KPrimaryColorLogin,
                         ),
                         suffixIcon: IconButton(
                           icon: Icon(
                             visibility ? Icons.visibility : Icons.visibility_off,
-                            color: kPrimaryColor,
+                            color: KPrimaryColorLogin,
                           ),
                           onPressed: () {
                             setState(() {
@@ -95,7 +95,7 @@ class _LoginState extends State<Login> {
                       borderRadius: BorderRadius.circular(29),
                       child: FlatButton(
                         padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-                        color: kPrimaryColor,
+                        color: KPrimaryColorLogin,
                         onPressed: () {
                           Navigator.push(context, MaterialPageRoute(builder: (context){return Inicio();}) );
                         },
@@ -111,7 +111,7 @@ class _LoginState extends State<Login> {
                     children: <Widget>[
                       Text(
                         "¿No tienes una cuenta? ",
-                        style: TextStyle(color: kPrimaryColor),
+                        style: TextStyle(color: KPrimaryColorLogin),
                       ),
                       GestureDetector(
                         onTap: () {
@@ -120,7 +120,7 @@ class _LoginState extends State<Login> {
                         child: Text(
                           "Registratre",
                           style: TextStyle(
-                            color: kPrimaryColor,
+                            color: KPrimaryColorLogin,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
