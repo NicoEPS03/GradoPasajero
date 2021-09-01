@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:proyecto_grado_pasajero/Cuenta/Contrase%C3%B1a.dart';
 import '../constants.dart';
 
-///Pantalla de registro
-class Registro extends StatefulWidget {
+class DatosPersonales extends StatefulWidget {
   @override
-  _RegistroState createState() => _RegistroState();
+  _DatosPersonalesState createState() => _DatosPersonalesState();
 }
 
-class _RegistroState extends State<Registro> {
+class _DatosPersonalesState extends State<DatosPersonales> {
   String dropdownValue = 'TI';
   var visibility = false;
   var visibility2 = false;
@@ -18,8 +18,8 @@ class _RegistroState extends State<Registro> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Registro"),
-        backgroundColor: KSecundaryColor,
+        title: Text("Editar datos personales"),
+        backgroundColor: kPrimaryColor,
         elevation: 20,
       ),
       body: Container(
@@ -28,13 +28,6 @@ class _RegistroState extends State<Registro> {
         child: Stack(
           alignment: Alignment.topLeft,
           children: <Widget>[
-            Positioned(
-                top: 0,
-                left: 0,
-                child: Image.asset(
-                  "assets/images/signup_top.png",
-                  width: size.width * 0.3,
-                )),
             SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -50,7 +43,7 @@ class _RegistroState extends State<Registro> {
                       decoration: InputDecoration(
                         suffixIcon: Icon(
                           Icons.person,
-                          color: KSecundaryColor,
+                          color: kPrimaryColor,
                         ),
                         hintText: "Nombre",
                         labelText: "Nombre",
@@ -68,7 +61,7 @@ class _RegistroState extends State<Registro> {
                       decoration: InputDecoration(
                         suffixIcon: Icon(
                           Icons.person,
-                          color: KSecundaryColor,
+                          color: kPrimaryColor,
                         ),
                         hintText: "Apellidos",
                         labelText: "Apellidos",
@@ -87,7 +80,7 @@ class _RegistroState extends State<Registro> {
                       decoration: InputDecoration(
                         suffixIcon: Icon(
                           Icons.phone,
-                          color: KSecundaryColor,
+                          color: kPrimaryColor,
                         ),
                         hintText: "Telefono",
                         labelText: "Telefono",
@@ -104,7 +97,7 @@ class _RegistroState extends State<Registro> {
                     child: DropdownButton<String>(
                       isExpanded: true,
                       value: dropdownValue,
-                      icon: const Icon(Icons.arrow_downward, color: KSecundaryColor,),
+                      icon: const Icon(Icons.arrow_downward, color: kPrimaryColor,),
                       iconSize: 30,
                       elevation: 16,
                       style: const TextStyle(color: Colors.black87),
@@ -137,7 +130,7 @@ class _RegistroState extends State<Registro> {
                       decoration: InputDecoration(
                         suffixIcon: Icon(
                           Icons.badge,
-                          color: KSecundaryColor,
+                          color: kPrimaryColor,
                         ),
                         hintText: "N Documento",
                         labelText: "N Documento",
@@ -156,66 +149,10 @@ class _RegistroState extends State<Registro> {
                       decoration: InputDecoration(
                         suffixIcon: Icon(
                           Icons.email,
-                          color: KSecundaryColor,
+                          color: kPrimaryColor,
                         ),
                         hintText: "E-mail",
                         labelText: "E-mail",
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                    width: size.width,
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                    ),
-                    child: TextFormField(
-                      obscureText: !this.visibility,
-                      decoration: InputDecoration(
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            visibility
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                            color: KSecundaryColor,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              this.visibility = !this.visibility;
-                            });
-                          },
-                        ),
-                        hintText: "Contraseña",
-                        labelText: "Contraseña",
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                    width: size.width,
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                    ),
-                    child: TextFormField(
-                      obscureText: !this.visibility2,
-                      decoration: InputDecoration(
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            visibility2
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                            color: KSecundaryColor,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              this.visibility2 = !this.visibility2;
-                            });
-                          },
-                        ),
-                        hintText: "Confirmar Contraseña",
-                        labelText: "Confirmar Contraseña",
                       ),
                     ),
                   ),
@@ -227,13 +164,35 @@ class _RegistroState extends State<Registro> {
                       borderRadius: BorderRadius.circular(29),
                       child: FlatButton(
                         padding:
-                            EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-                        color: KSecundaryColor,
+                        EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+                        color: kPrimaryColor,
                         child: Text(
-                          "Registrar",
+                          "Guardar",
                           style: TextStyle(color: Colors.white),
                         ),
                         onPressed: () {},
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 10),
+                    width: size.width * 0.8,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(29),
+                      child: FlatButton(
+                        padding:
+                        EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+                        color: Colors.red,
+                        child: Text(
+                          "Cambiar contraseña",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                                return Contrasena();
+                              }));
+                        },
                       ),
                     ),
                   ),
