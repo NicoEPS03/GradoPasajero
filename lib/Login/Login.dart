@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:proyecto_grado_pasajero/Login/Inicio.dart';
+import 'package:proyecto_grado_pasajero/Login/Menu.dart';
 import 'package:proyecto_grado_pasajero/Login/Registro.dart';
 import '../constants.dart';
 
-class Login extends StatefulWidget{
+class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
 }
 
-
 class _LoginState extends State<Login> {
-
   var visibility = false;
 
   @override
-  Widget build (BuildContext context){
+  Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -27,10 +25,10 @@ class _LoginState extends State<Login> {
             Positioned(
                 top: 0,
                 left: 0,
-                child: Image.asset("assets/images/main_top.png",
+                child: Image.asset(
+                  "assets/images/main_top.png",
                   width: size.width * 0.4,
-                )
-            ),
+                )),
             SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -74,7 +72,9 @@ class _LoginState extends State<Login> {
                         ),
                         suffixIcon: IconButton(
                           icon: Icon(
-                            visibility ? Icons.visibility : Icons.visibility_off,
+                            visibility
+                                ? Icons.visibility
+                                : Icons.visibility_off,
                             color: KPrimaryColorLogin,
                           ),
                           onPressed: () {
@@ -94,10 +94,14 @@ class _LoginState extends State<Login> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(29),
                       child: FlatButton(
-                        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 20, horizontal: 40),
                         color: KPrimaryColorLogin,
                         onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context){return Inicio();}) );
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return Menu();
+                          }));
                         },
                         child: Text(
                           "Ingresar",
@@ -115,7 +119,10 @@ class _LoginState extends State<Login> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context){return Registro();}) );
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return Registro();
+                          }));
                         },
                         child: Text(
                           "Registratre",
@@ -133,10 +140,10 @@ class _LoginState extends State<Login> {
             Positioned(
                 bottom: 0,
                 right: 0,
-                child: Image.asset("assets/images/login_bottom.png",
+                child: Image.asset(
+                  "assets/images/login_bottom.png",
                   width: size.width * 0.4,
-                )
-            )
+                ))
           ],
         ),
       ),

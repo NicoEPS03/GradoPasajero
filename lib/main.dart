@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
         primaryColor: kPrimaryColor,
         scaffoldBackgroundColor: Colors.white,
       ),
+      ///Inicio de app con la pantalla Login
       home: Login(),
     );
   }
