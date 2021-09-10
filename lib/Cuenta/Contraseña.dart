@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../constants.dart';
 
+///Pantalla para cambiar solo contraseña
 class Contrasena extends StatefulWidget {
   @override
   _ContrasenaState createState() => _ContrasenaState();

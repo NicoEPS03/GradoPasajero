@@ -69,6 +69,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_progress_button:
+    dependency: "direct main"
+    description:
+      name: flutter_progress_button
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.4"
   flutter_svg:
     dependency: "direct main"
     description:
@@ -130,13 +137,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.0"
-  progress_state_button:
-    dependency: "direct main"
-    description:
-      name: progress_state_button
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.3"
   provider:
     dependency: "direct main"
     description:
