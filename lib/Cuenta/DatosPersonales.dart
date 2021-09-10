@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:proyecto_grado_pasajero/Cuenta/Contrase%C3%B1a.dart';
 import '../constants.dart';
 
+///Pantalla de datos personales
 class DatosPersonales extends StatefulWidget {
   @override
   _DatosPersonalesState createState() => _DatosPersonalesState();

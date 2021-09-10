@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../constants.dart';
 
+///Cabecera de la pantalla de inicio
 class HeaderInicio extends StatelessWidget {
   const HeaderInicio({
     Key? key,

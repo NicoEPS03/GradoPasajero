@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../constants.dart';
 
+///Cabecera de la pantalla cuenta
 class HeaderCuenta extends StatelessWidget {
   const HeaderCuenta({
     Key? key,
@@ -24,7 +25,7 @@ class HeaderCuenta extends StatelessWidget {
             ),
             height: size.height * 0.35,
             decoration: BoxDecoration(
-              color: kPrimaryColors,
+              color: KSecundaryColor,
             ),
           ),
           Positioned(

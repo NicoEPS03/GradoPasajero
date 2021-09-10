@@ -5,6 +5,7 @@ import 'package:proyecto_grado_pasajero/Cuenta/FooterCuenta.dart';
 import 'package:proyecto_grado_pasajero/Login/NavigationDrawerWidget.dart';
 import 'HeaderCuenta.dart';
 
+///Pantalla de configuración de cuente
 class Cuenta extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

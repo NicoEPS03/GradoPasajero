@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:proyecto_grado_pasajero/Cuenta/EditarCodigo.dart';
+import 'package:proyecto_grado_pasajero/Login/Login.dart';
 
 import '../constants.dart';
 
+///Pie de pagina de la pantalla de cuenta
 class FooterCuenta extends StatelessWidget {
   const FooterCuenta({
     Key? key,
@@ -26,7 +29,7 @@ class FooterCuenta extends StatelessWidget {
                 BoxShadow(
                   offset: Offset(0, 10),
                   blurRadius: 50,
-                  color: kPrimaryColor.withOpacity(0.45),
+                  color: KSecundaryColor.withOpacity(0.45),
                 ),
               ],
             ),
@@ -36,7 +39,12 @@ class FooterCuenta extends StatelessWidget {
                     color: kPrimaryColorCuenta,
                     minWidth: size.width - 20,
                     height: size.height * 0.13,
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                            return EditarNFC();
+                          }));
+                    },
                     child: Align(
                         alignment: Alignment.centerLeft,
                         child: Column(
@@ -64,7 +72,12 @@ class FooterCuenta extends StatelessWidget {
                     color: kPrimaryColorCuenta,
                     minWidth: size.width - 20,
                     height: size.height * 0.13,
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                            return Login();
+                          }));
+                    },
                     child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(

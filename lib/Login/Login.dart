@@ -3,6 +3,7 @@ import 'package:proyecto_grado_pasajero/Login/Menu.dart';
 import 'package:proyecto_grado_pasajero/Login/Registro.dart';
 import '../constants.dart';
 
+///Pantalla de logeo
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();

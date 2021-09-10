@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_progress_button/flutter_progress_button.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:progress_state_button/progress_button.dart';
 import 'package:proyecto_grado_pasajero/Login/NavigationDrawerWidget.dart';
 import 'package:proyecto_grado_pasajero/constants.dart';
 
+///Pantalla de transferir saldo
 class TranferirSaldo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -83,38 +84,25 @@ class TranferirSaldo extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 20),
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 10),
-                  width: size.width * 0.8,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(29),
-                    child: FlatButton(
-                      padding:
-                      EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-                      color: KPrimaryColorLogin,
-                      onPressed: () {},
-                      child: Text(
-                        "Transferir",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ),
                 ProgressButton(
-                  stateWidgets: {
-                    ButtonState.idle: Text("Transferir",style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),),
-                    ButtonState.loading: Text("Pasando",style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),),
-                    ButtonState.fail: Text("Fail",style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),),
-                    ButtonState.success: Text("Success",style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),)
+                  defaultWidget: Text("Transferir", style: TextStyle(color: Colors.white),),
+                  color: KPrimaryColorLogin,
+                  borderRadius: 29,
+                  progressWidget: const CircularProgressIndicator(),
+                  width: size.width * 0.8,
+                  height: size.height * 0.065,
+                  onPressed: () async {
+                    int score = await Future.delayed(
+                        const Duration(milliseconds: 3000), () => 42);
+                    // After [onPressed], it will trigger animation running backwards, from end to beginning
+                    return () {
+                      // Optional returns is returning a function that can be called
+                      // after the animation is stopped at the beginning.
+                      // A best practice would be to do time-consuming task in [onPressed],
+                      // and do page navigation in the returned function.
+                      // So that user won't missed out the reverse animation.
+                    };
                   },
-                  stateColors: {
-                    ButtonState.idle: KPrimaryColorLogin,
-                    ButtonState.loading: Colors.blue.shade300,
-                    ButtonState.fail: Colors.red.shade300,
-                    ButtonState.success: Colors.green.shade400,
-                  },
-                  onPressed: (){},
-                  state: ButtonState.idle,
                 ),
               ]
             ),
