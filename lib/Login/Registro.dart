@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto_grado_pasajero/Model/EPasajeros.dart';
 import '../constants.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 ///Pantalla de registro
 class Registro extends StatefulWidget {
@@ -10,9 +10,9 @@ class Registro extends StatefulWidget {
   _RegistroState createState() => _RegistroState();
 }
 
-FirebaseFirestore db = FirebaseFirestore.instance;
-final FirebaseAuth auth = FirebaseAuth.instance;
-final user = auth.currentUser;
+final database = FirebaseDatabase.instance.reference().child('Pasajeros');
+
+final auth = FirebaseAuth.instance;
 
 class _RegistroState extends State<Registro> {
   String dropdownValue = 'TI';
@@ -274,11 +274,29 @@ class _RegistroState extends State<Registro> {
                           "Registrar",
                           style: TextStyle(color: Colors.white),
                         ),
-                        onPressed: (){
-                          var pasajero = EPasajeros(_nombreController.text, _apellidoController.text, _telefonoController.text,
-                                                    dropdownValue, _num_documentoController.text, _correoController.text,
-                                                    _claveController.text, 0, "", false, false);
-                          db.collection('Pasajerors').doc(user!.uid).set(pasajero as Map<String, dynamic>);
+                        onPressed: () async{
+                          
+                          UserCredential userCredential = await auth.createUserWithEmailAndPassword(email: _correoController.text, password: _claveController.text);
+                          final User? user = await auth.currentUser;
+
+                          if (user != null) {
+                            user.sendEmailVerification();
+                            database.child(user.uid).set({
+                              'nombre': _nombreController.text,
+                              'apellido': _apellidoController.text,
+                              'telefono': _telefonoController.text,
+                              'tipo_documento': dropdownValue,
+                              'num_documento': _num_documentoController.text,
+                              'correo': _correoController.text,
+                              'clave': _claveController.text,
+                              'saldo': 0,
+                              'id_NFC': '',
+                              'confirmacion_correo': false,
+                              'estado_cuenta': false
+                            });
+                          }else{
+                            print('asdas');
+                          }
                         },
                       ),
                     ),
