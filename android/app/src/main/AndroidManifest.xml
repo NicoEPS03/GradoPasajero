@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.proyecto_grado_pasajero">
+    <uses-permission android:name="android.permission.CAMERA" />
    <application
-        android:label="proyecto_grado_pasajero"
+        android:label="PTP"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
