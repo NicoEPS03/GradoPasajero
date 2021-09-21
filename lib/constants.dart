@@ -15,3 +15,8 @@ const KSecundaryColor = Color.fromRGBO(159, 78, 90, 0.47);
 //const kPrimaryColor = Color(0xFF3235DB)
 ///Color cuadro pantalla cuenta
 const kPrimaryColors = Color.fromRGBO(255, 101, 0, 1.0);
+
+/*        _   _       __  _   _
+ /|/ / / ` / / /  / /  /_/ /_`
+/ | / /_, /_/ /_,/ /  / / ._/  /_/|/|//_/
+ */

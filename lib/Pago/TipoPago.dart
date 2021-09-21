@@ -1,15 +1,31 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:barcode_scan/barcode_scan.dart';
+import 'package:flutter/services.dart';
 import 'package:proyecto_grado_pasajero/constants.dart';
 
-class TipoPago extends StatelessWidget {
+///Pantalla tipo de pago
+class TipoPago extends StatefulWidget {
+  @override
+  _TipoPagoState createState() => _TipoPagoState();
+}
+
+class _TipoPagoState extends State<TipoPago> {
+  ScanResult? _scanResult;
+
+  static final _possibleFormats = BarcodeFormat.values.toList()
+    ..removeWhere((e) => e != BarcodeFormat.qr);
+
+  List<BarcodeFormat> selectedFormats = [..._possibleFormats];
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Tipo pago"),
+        title: Text("Tipo de pago"),
         backgroundColor: kPrimaryColor,
         elevation: 20,
       ),
@@ -29,7 +45,9 @@ class TipoPago extends StatelessWidget {
                   "Codigo QR",
                   style: TextStyle(color: Colors.white),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  _scanCode();
+                },
               ),
             ),
           ),
@@ -53,4 +71,47 @@ class TipoPago extends StatelessWidget {
       ),
     );
   }
+
+  Future _scanCode() async {
+    try {
+      var options = ScanOptions(
+        strings: {
+          "cancel": "Cancelar",
+          "flash_on": "Flash on",
+          "flash_off": "Flash off",
+        },
+        restrictFormat: selectedFormats,
+      );
+      var result = await BarcodeScanner.scan(options: options);
+
+      setState(() => _scanResult = result);
+    } on PlatformException catch (e) {
+      var result = ScanResult(
+        type: ResultType.Error,
+        format: BarcodeFormat.unknown,
+      );
+
+      if (e.code == BarcodeScanner.cameraAccessDenied) {
+        setState(() {
+          result.rawContent = 'Permiso de camara no adquirido';
+        });
+      } else {
+        result.rawContent = 'Error desconocido: $e';
+      }
+      setState(() {
+        _scanResult = result;
+      });
+    }
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<ScanResult>('_scanResult', _scanResult));
+  }
 }
+
+/*        _   _       __  _   _
+ /|/ / / ` / / /  / /  /_/ /_`
+/ | / /_, /_/ /_,/ /  / / ._/  /_/|/|//_/
+ */

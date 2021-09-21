@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:proyecto_grado_pasajero/Model/EPasajeros.dart';
 import '../constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 ///Pantalla de registro
 class Registro extends StatefulWidget {
@@ -7,10 +10,42 @@ class Registro extends StatefulWidget {
   _RegistroState createState() => _RegistroState();
 }
 
+FirebaseFirestore db = FirebaseFirestore.instance;
+final FirebaseAuth auth = FirebaseAuth.instance;
+final user = auth.currentUser;
+
 class _RegistroState extends State<Registro> {
   String dropdownValue = 'TI';
   var visibility = false;
   var visibility2 = false;
+
+  final _nombreController = TextEditingController();
+  final _apellidoController = TextEditingController();
+  final _telefonoController = TextEditingController();
+  final _num_documentoController = TextEditingController();
+  final _correoController = TextEditingController();
+  final _claveController = TextEditingController();
+  final _saldoController = TextEditingController();
+  final _id_NFCController = TextEditingController();
+  final _estado_cuentaController = TextEditingController();
+  final _confirmacion_correoController = TextEditingController();
+
+
+
+  @override
+  void dispose(){
+    _nombreController.dispose();
+    _apellidoController.dispose();
+    _telefonoController.dispose();
+    _num_documentoController.dispose();
+    _correoController.dispose();
+    _claveController.dispose();
+    _saldoController.dispose();
+    _id_NFCController.dispose();
+    _estado_cuentaController.dispose();
+    _confirmacion_correoController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +82,7 @@ class _RegistroState extends State<Registro> {
                       color: Colors.transparent,
                     ),
                     child: TextFormField(
+                      controller: _nombreController,
                       decoration: InputDecoration(
                         suffixIcon: Icon(
                           Icons.person,
@@ -65,6 +101,7 @@ class _RegistroState extends State<Registro> {
                       color: Colors.transparent,
                     ),
                     child: TextFormField(
+                      controller: _apellidoController,
                       decoration: InputDecoration(
                         suffixIcon: Icon(
                           Icons.person,
@@ -83,6 +120,7 @@ class _RegistroState extends State<Registro> {
                       color: Colors.transparent,
                     ),
                     child: TextFormField(
+                      controller: _telefonoController,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         suffixIcon: Icon(
@@ -134,6 +172,7 @@ class _RegistroState extends State<Registro> {
                       color: Colors.transparent,
                     ),
                     child: TextFormField(
+                      controller: _num_documentoController,
                       decoration: InputDecoration(
                         suffixIcon: Icon(
                           Icons.badge,
@@ -152,6 +191,7 @@ class _RegistroState extends State<Registro> {
                       color: Colors.transparent,
                     ),
                     child: TextFormField(
+                      controller: _correoController,
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         suffixIcon: Icon(
@@ -171,6 +211,7 @@ class _RegistroState extends State<Registro> {
                       color: Colors.transparent,
                     ),
                     child: TextFormField(
+                      controller: _claveController,
                       obscureText: !this.visibility,
                       decoration: InputDecoration(
                         suffixIcon: IconButton(
@@ -233,7 +274,12 @@ class _RegistroState extends State<Registro> {
                           "Registrar",
                           style: TextStyle(color: Colors.white),
                         ),
-                        onPressed: () {},
+                        onPressed: (){
+                          var pasajero = EPasajeros(_nombreController.text, _apellidoController.text, _telefonoController.text,
+                                                    dropdownValue, _num_documentoController.text, _correoController.text,
+                                                    _claveController.text, 0, "", false, false);
+                          db.collection('Pasajerors').doc(user!.uid).set(pasajero as Map<String, dynamic>);
+                        },
                       ),
                     ),
                   ),
@@ -245,4 +291,10 @@ class _RegistroState extends State<Registro> {
       ),
     );
   }
+
 }
+
+/*        _   _       __  _   _
+ /|/ / / ` / / /  / /  /_/ /_`
+/ | / /_, /_/ /_,/ /  / / ._/  /_/|/|//_/
+ */
