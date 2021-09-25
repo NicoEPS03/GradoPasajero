@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -5,12 +6,19 @@ import '../constants.dart';
 
 ///Cabecera de la pantalla de inicio
 class HeaderInicio extends StatelessWidget {
+
   const HeaderInicio({
     Key? key,
     required this.size,
+    required this.nombre,
+    required this.apellido,
+    required this.saldo,
   }) : super(key: key);
 
   final Size size;
+  final String nombre;
+  final String apellido;
+  final int saldo;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +43,7 @@ class HeaderInicio extends StatelessWidget {
             child: Row(
               children: <Widget>[
                 Text(
-                  'Valentina Delgado',
+                  nombre + ' ' + apellido,
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: MediaQuery.of(context).size.width / 15,
@@ -43,7 +51,7 @@ class HeaderInicio extends StatelessWidget {
                 ),
                 Spacer(),
                 Text(
-                  '\$45.000',
+                  '\$' + saldo.toString(),
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: MediaQuery.of(context).size.width / 16),

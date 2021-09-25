@@ -6,6 +6,15 @@ import '../constants.dart';
 
 ///Dibujo de las opciones en el menu lateral
 class NavigationDrawerWidget extends StatelessWidget {
+  const NavigationDrawerWidget({
+    Key? key,
+    required this.nombre,
+    required this.apellido,
+  }) : super(key: key);
+
+  final String nombre;
+  final String apellido;
+
   static final padding = EdgeInsets.symmetric(horizontal: 20);
 
   @override
@@ -21,7 +30,7 @@ class NavigationDrawerWidget extends StatelessWidget {
                     const SizedBox(height: 24),
                     buildHeader(
                       context,
-                      name: 'Eduardo Sanchez',
+                      name: nombre + ' ' + apellido,
                     ),
                     const SizedBox(height: 30),
                     Row(
