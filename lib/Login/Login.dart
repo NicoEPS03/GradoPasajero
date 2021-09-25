@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto_grado_pasajero/Login/Menu.dart';
 import 'package:proyecto_grado_pasajero/Login/Registro.dart';
@@ -11,6 +12,19 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   var visibility = false;
+  final auth = FirebaseAuth.instance;
+
+  final _correoController = TextEditingController();
+  final _claveController = TextEditingController();
+
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    _correoController.dispose();
+    _claveController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,111 +45,154 @@ class _LoginState extends State<Login> {
                   width: size.width * 0.4,
                 )),
             SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 10),
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                    width: size.width * 0.8,
-                    decoration: BoxDecoration(
-                      color: kPrimaryLightColor,
-                      borderRadius: BorderRadius.circular(29),
-                    ),
-                    child: TextField(
-                      cursorColor: kPrimaryColor,
-                      decoration: InputDecoration(
-                        icon: Icon(
-                          Icons.person,
-                          color: KPrimaryColorLogin,
-                        ),
-                        hintText: "E-mail",
-                        border: InputBorder.none,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 10),
+                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                      width: size.width * 0.8,
+                      decoration: BoxDecoration(
+                        color: kPrimaryLightColor,
+                        borderRadius: BorderRadius.circular(29),
                       ),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 10),
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                    width: size.width * 0.8,
-                    decoration: BoxDecoration(
-                      color: kPrimaryLightColor,
-                      borderRadius: BorderRadius.circular(29),
-                    ),
-                    child: TextFormField(
-                      obscureText: !this.visibility,
-                      cursorColor: KPrimaryColorLogin,
-                      decoration: InputDecoration(
-                        hintText: "Contraseña",
-                        icon: Icon(
-                          Icons.lock,
-                          color: KPrimaryColorLogin,
-                        ),
-                        suffixIcon: IconButton(
+                      child: TextFormField(
+                        cursorColor: kPrimaryColor,
+                        controller: _correoController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'El e-mail es requerido';
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
                           icon: Icon(
-                            visibility
-                                ? Icons.visibility
-                                : Icons.visibility_off,
+                            Icons.person,
                             color: KPrimaryColorLogin,
                           ),
-                          onPressed: () {
-                            setState(() {
-                              this.visibility = !this.visibility;
-                            });
+                          hintText: "E-mail",
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 10),
+                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                      width: size.width * 0.8,
+                      decoration: BoxDecoration(
+                        color: kPrimaryLightColor,
+                        borderRadius: BorderRadius.circular(29),
+                      ),
+                      child: TextFormField(
+                        controller: _claveController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'El contraseña es requerida';
+                          }
+                          return null;
+                        },
+                        obscureText: !this.visibility,
+                        cursorColor: KPrimaryColorLogin,
+                        decoration: InputDecoration(
+                          hintText: "Contraseña",
+                          icon: Icon(
+                            Icons.lock,
+                            color: KPrimaryColorLogin,
+                          ),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              visibility
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: KPrimaryColorLogin,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                this.visibility = !this.visibility;
+                              });
+                            },
+                          ),
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: size.height * 0.01),
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 10),
+                      width: size.width * 0.8,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(29),
+                        child: FlatButton(
+                          padding:
+                              EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+                          color: KPrimaryColorLogin,
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              try {
+                                await auth.signInWithEmailAndPassword(email: _correoController.text , password: _claveController.text);
+                                if(auth.currentUser!.emailVerified == true){
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                        return Menu();
+                                      }));
+                                }else{
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text('Cuenta sin verificar')),
+                                  );
+                                  auth.currentUser!.sendEmailVerification();
+                                }
+                              } on FirebaseAuthException catch (e) {
+                                if (e.code == 'user-not-found') {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text('Email no registrado')),
+                                  );
+                                } else if (e.code == 'wrong-password') {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text('Contraseña incorrecta')),
+                                  );
+                                }
+                              }
+                            }
+
                           },
-                        ),
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: size.height * 0.01),
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 10),
-                    width: size.width * 0.8,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(29),
-                      child: FlatButton(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-                        color: KPrimaryColorLogin,
-                        onPressed: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return Menu();
-                          }));
-                        },
-                        child: Text(
-                          "Ingresar",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        "¿No tienes una cuenta? ",
-                        style: TextStyle(color: KPrimaryColorLogin),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return Registro();
-                          }));
-                        },
-                        child: Text(
-                          "Registratre",
-                          style: TextStyle(
-                            color: KPrimaryColorLogin,
-                            fontWeight: FontWeight.bold,
+                          child: Text(
+                            "Ingresar",
+                            style: TextStyle(color: Colors.white),
                           ),
                         ),
-                      )
-                    ],
-                  ),
-                ],
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "¿No tienes una cuenta? ",
+                          style: TextStyle(color: KPrimaryColorLogin),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return Registro();
+                            }));
+                          },
+                          child: Text(
+                            "Registratre",
+                            style: TextStyle(
+                              color: KPrimaryColorLogin,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
             Positioned(

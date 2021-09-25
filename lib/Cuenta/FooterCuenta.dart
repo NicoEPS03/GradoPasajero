@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto_grado_pasajero/Cuenta/EditarCodigo.dart';
@@ -10,12 +11,16 @@ class FooterCuenta extends StatelessWidget {
   const FooterCuenta({
     Key? key,
     required this.size,
+    required this.codigo
   }) : super(key: key);
 
   final Size size;
+  final String codigo;
 
   @override
   Widget build(BuildContext context) {
+    final auth = FirebaseAuth.instance;
+
     return Container(
       height: size.height * 0.39,
       child: Stack(
@@ -59,7 +64,7 @@ class FooterCuenta extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              'ID. ' + '123929',
+                              'ID. ' + codigo,
                               style: TextStyle(
                                 color: Colors.blueGrey,
                                 fontSize:
@@ -73,6 +78,7 @@ class FooterCuenta extends StatelessWidget {
                     minWidth: size.width - 20,
                     height: size.height * 0.13,
                     onPressed: () {
+                      auth.signOut();
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                             return Login();
