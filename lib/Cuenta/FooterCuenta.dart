@@ -45,6 +45,11 @@ class FooterCuenta extends StatelessWidget {
                     minWidth: size.width - 20,
                     height: size.height * 0.13,
                     onPressed: () {
+                      /*Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute<Null>(
+                          builder: (BuildContext context){
+                            return new EditarNFC();
+                          })
+                      , (Route<dynamic> route) => true);*/
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                             return EditarNFC();
@@ -97,7 +102,8 @@ class FooterCuenta extends StatelessWidget {
                     color: kPrimaryColorCuenta,
                     minWidth: size.width - 20,
                     height: size.height * 0.13,
-                    onPressed: () {},
+                    onPressed: () {
+                    },
                     child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(

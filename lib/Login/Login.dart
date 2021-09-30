@@ -133,10 +133,15 @@ class _LoginState extends State<Login> {
                               try {
                                 await auth.signInWithEmailAndPassword(email: _correoController.text , password: _claveController.text);
                                 if(auth.currentUser!.emailVerified == true){
-                                  Navigator.push(context,
+                                  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute<Null>(
+                                      builder: (BuildContext context){
+                                        return new Menu();
+                                      })
+                                      , (Route<dynamic> route) => false);
+                                  /*Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
                                         return Menu();
-                                      }));
+                                      }));*/
                                 }else{
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(

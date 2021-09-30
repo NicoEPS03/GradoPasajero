@@ -37,16 +37,27 @@ class Cuenta extends StatelessWidget {
     //Asigna los datos del pasajero a las variabla a pasar
     getPasajero() async{
       EPasajeros pasajero = await getPasajeroData(user!.uid);
-      _nombre = pasajero.nombre;
-      _apellido = pasajero.apellido;
-      _codigo = pasajero.id_NFC.replaceAllMapped(RegExp(r".{2}"), (match) => "${match.group(0)} ");
+      var nombreCompleto = pasajero.nombre;
+      var apellidoCompleto = pasajero.apellido;
+      if(nombreCompleto.indexOf(" ") == -1){
+        _nombre = pasajero.nombre;
+      }else{
+        _nombre = nombreCompleto.substring(0,nombreCompleto.indexOf(" "));
+      }
+
+      if(apellidoCompleto.indexOf(" ") == -1){
+        _apellido = pasajero.apellido;
+      }else{
+        _apellido = apellidoCompleto.substring(0,apellidoCompleto.indexOf(" "));
+      }
+      _codigo = pasajero.id_NFC;
     }
 
     return FutureBuilder(
         future: getPasajero(),
         builder: (_,AsyncSnapshot snapshot){
           return Scaffold(
-            drawer: NavigationDrawerWidget(nombre: _nombre,apellido: _apellido,),
+            drawer: NavigationDrawerWidget(nombre: _nombre),
             appBar: AppBar(
               elevation: 0,
               leading: Builder(

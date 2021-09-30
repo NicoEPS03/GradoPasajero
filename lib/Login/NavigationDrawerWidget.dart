@@ -9,11 +9,9 @@ class NavigationDrawerWidget extends StatelessWidget {
   const NavigationDrawerWidget({
     Key? key,
     required this.nombre,
-    required this.apellido,
   }) : super(key: key);
 
   final String nombre;
-  final String apellido;
 
   static final padding = EdgeInsets.symmetric(horizontal: 20);
 
@@ -30,7 +28,7 @@ class NavigationDrawerWidget extends StatelessWidget {
                     const SizedBox(height: 24),
                     buildHeader(
                       context,
-                      name: nombre + ' ' + apellido,
+                      name: nombre,
                     ),
                     const SizedBox(height: 30),
                     Row(
