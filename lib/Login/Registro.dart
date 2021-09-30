@@ -360,7 +360,7 @@ class _RegistroState extends State<Registro> {
                                       'clave': _claveController.text,
                                       'saldo': 0,
                                       'id_NFC': '',
-                                      'estado': false
+                                      'estado': true
                                     }),
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
