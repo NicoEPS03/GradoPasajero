@@ -64,16 +64,6 @@ class _TranferirSaldoState extends State<TranferirSaldo> {
       });
     }
 
-    //Obtiene los datos del nfc desde firebase
-    Future<ENFC> getNFC(String codigo) async {
-      return await databaseNFC.child(codigo)
-          .once()
-          .then((result) {
-        final LinkedHashMap value = result.value;
-        return ENFC.fromMap(value);
-      });
-    }
-
     User? user = auth.currentUser;
 
     //Asigna los datos del pasajero a las variable a pasar

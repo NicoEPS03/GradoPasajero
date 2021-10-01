@@ -4,6 +4,7 @@ import 'package:proyecto_grado_pasajero/Cuenta/Cuenta.dart';
 import 'package:proyecto_grado_pasajero/Login/Inicio.dart';
 import 'package:proyecto_grado_pasajero/Model/NavigationItem.dart';
 import 'package:proyecto_grado_pasajero/Provider/NavigationProvider.dart';
+import 'package:proyecto_grado_pasajero/Rutas/Rutas.dart';
 import 'package:proyecto_grado_pasajero/Saldo/TransferirSaldo.dart';
 import 'package:proyecto_grado_pasajero/constants.dart';
 
@@ -40,7 +41,7 @@ class _MainPageState extends State<MainPage> {
       case NavigationItem.inicio:
         return Inicio();
       case NavigationItem.rutas:
-        return Inicio();
+        return Rutas();
       case NavigationItem.tranferirSaldo:
         return TranferirSaldo();
       case NavigationItem.configuracion:

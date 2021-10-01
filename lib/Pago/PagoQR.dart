@@ -10,7 +10,7 @@ class EnlaceBusQR extends StatefulWidget {
 }
 
 class _EnlaceBusQR extends State<EnlaceBusQR> {
-  ScanResult? scanResult;
+  /*ScanResult? scanResult;
 
   //${_scanResult!.rawContent} contenido del qr
 
@@ -250,7 +250,14 @@ class _EnlaceBusQR extends State<EnlaceBusQR> {
       );
       var result = await BarcodeScanner.scan(options: options);
 
-      setState(() => scanResult = result);
+      setState(() {
+        scanResult = result;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('asd'),
+          ),
+        );
+      });
     } on PlatformException catch (e) {
       var result = ScanResult(
         type: ResultType.Error,
@@ -266,13 +273,17 @@ class _EnlaceBusQR extends State<EnlaceBusQR> {
       }
       setState(() {
         scanResult = result;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('aca'),
+          ),
+        );
       });
     }
   }
-}
+}*/
 
-/*
-ScanResult? _scanResult;
+  ScanResult? _scanResult;
 
   @override
   Widget build(BuildContext context) {
@@ -282,7 +293,9 @@ ScanResult? _scanResult;
         title: Text('Lector códigos QR'),
       ),
       body: Center(
-          child:_scanResult==null?Text('Esperando datos de código'):Column(
+          child: _scanResult == null
+              ? Text('Esperando datos de código')
+              : Column(
             children: [
               Text('Contenido: ${_scanResult!.rawContent}'),
               Text('Formato: ${_scanResult!.format.toString()}'),
@@ -290,8 +303,9 @@ ScanResult? _scanResult;
           )
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){
+        onPressed: () {
           _scanCode();
+          print("hola");
         },
         child: Icon(Icons.camera),
       ),
@@ -305,9 +319,5 @@ ScanResult? _scanResult;
       _scanResult = result;
     });
   }
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<ScanResult>('_scanResult', _scanResult));
-  }
- */
+
+}

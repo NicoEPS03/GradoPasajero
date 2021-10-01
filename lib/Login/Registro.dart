@@ -1,7 +1,10 @@
+import 'dart:collection';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto_grado_pasajero/Login/Login.dart';
+import 'package:proyecto_grado_pasajero/Model/EPasajeros.dart';
 import '../constants.dart';
 
 ///Pantalla de registro
@@ -42,6 +45,18 @@ class _RegistroState extends State<Registro> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    String _idPasarPasajero = '';
+
+    //Obtiene los datos del pasajero si ya existe uno
+    Future<EPasajeros> getPasajeroDataPasar(String documento) async {
+      return await database.orderByChild("num_documento").equalTo(documento)
+          .once()
+          .then((result) {
+        final LinkedHashMap value = result.value;
+        _idPasarPasajero = value.keys.toString().replaceAll("(", "").replaceAll(")", "");
+        return EPasajeros.fromMap(value.values.first);
+      });
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -343,52 +358,61 @@ class _RegistroState extends State<Registro> {
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
                               try {
-                                UserCredential userCredential = await auth.createUserWithEmailAndPassword(
-                                    email: _correoController.text,
-                                    password: _claveController.text
-                                );
-                                User? user = auth.currentUser;
-                                if (user != null){
-                                  user.sendEmailVerification().whenComplete(() => {
-                                    database.child(user.uid).set({
-                                      'nombre': _nombreController.text,
-                                      'apellido': _apellidoController.text,
-                                      'telefono': _telefonoController.text,
-                                      'tipo_documento': dropdownValue,
-                                      'num_documento': _num_documentoController.text,
-                                      'correo': _correoController.text,
-                                      'clave': _claveController.text,
-                                      'saldo': 0,
-                                      'id_NFC': '',
-                                      'estado': true
-                                    }),
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                          content: Text('Pasajero registrado exitosamente'),
-                                          duration: Duration(seconds: 6)),
-                                    ),
-                                    Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                        return Login();
-                                      }))
-                                  });
-                                }
-                              } on FirebaseAuthException catch (e) {
-                                if (e.code == 'weak-password') {
-                                  print('The password provided is too weak.');
-                                } else if (e.code == 'email-already-in-use') {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text('Correo ya registrado')),
-                                  );
-                                }
-                              } catch (e) {
+                                await getPasajeroDataPasar(_num_documentoController.text);
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
-                                      content: Text('Problema al crear el pasajero')),
+                                      content: Text('Documento ya registrado')),
                                 );
-                                print(e);
+                              } catch (e){
+                                try {
+                                  UserCredential userCredential = await auth.createUserWithEmailAndPassword(
+                                      email: _correoController.text,
+                                      password: _claveController.text
+                                  );
+                                  User? user = auth.currentUser;
+                                  if (user != null){
+                                    user.sendEmailVerification().whenComplete(() => {
+                                      database.child(user.uid).set({
+                                        'nombre': _nombreController.text,
+                                        'apellido': _apellidoController.text,
+                                        'telefono': _telefonoController.text,
+                                        'tipo_documento': dropdownValue,
+                                        'num_documento': _num_documentoController.text,
+                                        'correo': _correoController.text,
+                                        'clave': _claveController.text,
+                                        'saldo': 0,
+                                        'id_NFC': '',
+                                        'estado': true
+                                      }),
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content: Text('Pasajero registrado exitosamente'),
+                                            duration: Duration(seconds: 6)),
+                                      ),
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) {
+                                            return Login();
+                                          }))
+                                    });
+                                  }
+                                } on FirebaseAuthException catch (e) {
+                                  if (e.code == 'weak-password') {
+                                    print('The password provided is too weak.');
+                                  } else if (e.code == 'email-already-in-use') {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text('Correo ya registrado')),
+                                    );
+                                  }
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text('Problema al crear el pasajero')),
+                                  );
+                                  print(e);
+                                }
                               }
+
                             }
                           },
                         ),

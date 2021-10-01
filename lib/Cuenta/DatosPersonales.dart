@@ -29,7 +29,30 @@ class _DatosPersonalesState extends State<DatosPersonales> {
 
   final _formKey = GlobalKey<FormState>();
 
-  /*@override
+  String _correoAnterior = '';
+
+  //Obtiene los datos del pasajaro desde firebase
+  Future<EPasajeros> getPasajeroData(String userId) async {
+    return await database.child(userId)
+        .once()
+        .then((result) {
+      final LinkedHashMap value = result.value;
+      return EPasajeros.fromMap(value);
+    });
+  }
+  //Asigna los datos del pasajero a las variabla a pasar
+  getPasajero() async{
+    EPasajeros pasajero = await getPasajeroData(auth.currentUser!.uid);
+    _nombreController.text = pasajero.nombre;
+    _apellidoController.text = pasajero.apellido;
+    _telefonoController.text = pasajero.telefono;
+    dropdownValue = pasajero.tipo_documento;
+    _num_documentoController.text = pasajero.num_documento;
+    _correoAnterior = pasajero.correo;
+    _correoController.text = pasajero.correo;
+  }
+
+  @override
   void dispose() {
     _nombreController.dispose();
     _apellidoController.dispose();
@@ -37,36 +60,20 @@ class _DatosPersonalesState extends State<DatosPersonales> {
     _num_documentoController.dispose();
     _correoController.dispose();
     super.dispose();
-  }*/
+  }
+
+  @override
+  void initState() {
+    getPasajero();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    String _correoAnterior = '';
-
-    //Obtiene los datos del pasajaro desde firebase
-    Future<EPasajeros> getPasajeroData(String userId) async {
-      return await database.child(userId)
-          .once()
-          .then((result) {
-        final LinkedHashMap value = result.value;
-        return EPasajeros.fromMap(value);
-      });
-    }
 
     User? user = auth.currentUser;
 
-    //Asigna los datos del pasajero a las variabla a pasar
-    getPasajero() async{
-      EPasajeros pasajero = await getPasajeroData(user!.uid);
-      _nombreController.text = pasajero.nombre;
-      _apellidoController.text = pasajero.apellido;
-      _telefonoController.text = pasajero.telefono;
-      dropdownValue = pasajero.tipo_documento;
-      _num_documentoController.text = pasajero.num_documento;
-      _correoAnterior = pasajero.correo;
-      _correoController.text = pasajero.correo;
-    }
     FutureBuilder(
       future: getPasajero(), builder: (context, snapshot) {return Scaffold();},
     );
