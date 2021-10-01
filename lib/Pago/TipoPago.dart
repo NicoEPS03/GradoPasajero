@@ -1,8 +1,13 @@
+import 'dart:collection';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/services.dart';
+import 'package:proyecto_grado_pasajero/Model/EPasajeros.dart';
 import 'package:proyecto_grado_pasajero/constants.dart';
 
 ///Pantalla tipo de pago
@@ -12,12 +17,25 @@ class TipoPago extends StatefulWidget {
 }
 
 class _TipoPagoState extends State<TipoPago> {
+  final auth = FirebaseAuth.instance;
+  final database = FirebaseDatabase.instance.reference().child('Pasajeros');
+
   ScanResult? _scanResult;
 
   static final _possibleFormats = BarcodeFormat.values.toList()
     ..removeWhere((e) => e != BarcodeFormat.qr);
 
   List<BarcodeFormat> selectedFormats = [..._possibleFormats];
+
+  //Obtiene los datos del pasajaro desde firebase
+  Future<EPasajeros> getPasajeroData(String userId) async {
+    return await database.child(userId)
+        .once()
+        .then((result) {
+      final LinkedHashMap value = result.value;
+      return EPasajeros.fromMap(value);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,45 +47,53 @@ class _TipoPagoState extends State<TipoPago> {
         backgroundColor: kPrimaryColor,
         elevation: 20,
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 10),
-            width: size.width * 0.8,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(29),
-              child: FlatButton(
-                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-                color: kPrimaryColor,
-                child: Text(
-                  "Codigo QR",
-                  style: TextStyle(color: Colors.white),
+      body: Container(
+        height: size.height,
+        width: double.infinity,
+        child: Stack(
+          alignment: Alignment.center,
+          children: <Widget>[
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 10),
+                  width: size.width * 0.8,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(29),
+                    child: FlatButton(
+                      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+                      color: kPrimaryColor,
+                      child: Text(
+                        "Codigo QR",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onPressed: () {
+                        _scanCode();
+                      },
+                    ),
+                  ),
                 ),
-                onPressed: () {
-                  _scanCode();
-                },
-              ),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 10),
-            width: size.width * 0.8,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(29),
-              child: FlatButton(
-                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-                color: kPrimaryColor,
-                child: Text(
-                  "NFC",
-                  style: TextStyle(color: Colors.white),
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 10),
+                  width: size.width * 0.8,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(29),
+                    child: FlatButton(
+                      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+                      color: kPrimaryColor,
+                      child: Text(
+                        "NFC",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onPressed: () {},
+                    ),
+                  ),
                 ),
-                onPressed: () {},
-              ),
+              ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -84,7 +110,29 @@ class _TipoPagoState extends State<TipoPago> {
       );
       var result = await BarcodeScanner.scan(options: options);
 
-      setState(() => _scanResult = result);
+      setState(() async{
+        _scanResult = result;
+        if (_scanResult!.rawContent != null){
+          User? user = auth.currentUser;
+          EPasajeros pasajero = await getPasajeroData(user!.uid);
+          if (pasajero.saldo >= 1550){
+            await database.child(user.uid).update({
+              'saldo': pasajero.saldo - 1550
+            });
+            //aca va para agregar al historial de rutas tomadas
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                  content: Text('Pago realizado')),
+            );
+          }else{
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                  content: Text('Saldo insuficiente')),
+            );
+          }
+
+        }
+      } );
     } on PlatformException catch (e) {
       var result = ScanResult(
         type: ResultType.Error,

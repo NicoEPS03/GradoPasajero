@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto_grado_pasajero/Cuenta/EditarCodigo.dart';
@@ -20,6 +21,7 @@ class FooterCuenta extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final auth = FirebaseAuth.instance;
+    final database = FirebaseDatabase.instance.reference().child('Pasajeros');
 
     return Container(
       height: size.height * 0.39,
@@ -103,6 +105,36 @@ class FooterCuenta extends StatelessWidget {
                     minWidth: size.width - 20,
                     height: size.height * 0.13,
                     onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("¿Seguro que desea eliminar la cuenta?"),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, 'Cancel'),
+                                  child: const Text('Cancelar'),
+                                ),
+                                TextButton(
+                                  onPressed: () async {
+                                    Navigator.pop(context, 'OK');
+                                    User? user = auth.currentUser;
+                                    await database.child(user!.uid).update({
+                                      'estado': false,
+                                    });
+                                    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute<Null>(
+                                        builder: (BuildContext context){
+                                          return new Login();
+                                        })
+                                        , (Route<dynamic> route) => false);
+                                    auth.currentUser!.delete();
+                                  },
+                                  child: const Text('Aceptar'),
+                                ),
+                              ],
+                            );
+                          }
+                      );
                     },
                     child: Align(
                         alignment: Alignment.centerLeft,
