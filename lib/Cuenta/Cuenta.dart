@@ -10,7 +10,7 @@ import 'package:proyecto_grado_pasajero/Login/NavigationDrawerWidget.dart';
 import 'package:proyecto_grado_pasajero/Model/EPasajeros.dart';
 import 'HeaderCuenta.dart';
 
-///Pantalla de configuración de cuente
+///Pantalla de configuración de cuenta
 class Cuenta extends StatelessWidget {
   final auth = FirebaseAuth.instance;
   final database = FirebaseDatabase.instance.reference().child('Pasajeros');
