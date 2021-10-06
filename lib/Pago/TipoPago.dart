@@ -7,7 +7,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
+import 'package:proyecto_grado_pasajero/Model/EBuses.dart';
 import 'package:proyecto_grado_pasajero/Model/EPasajeros.dart';
+import 'package:proyecto_grado_pasajero/Model/ERutaBusConductor.dart';
 import 'package:proyecto_grado_pasajero/constants.dart';
 
 ///Pantalla tipo de pago
@@ -19,6 +22,13 @@ class TipoPago extends StatefulWidget {
 class _TipoPagoState extends State<TipoPago> {
   final auth = FirebaseAuth.instance;
   final database = FirebaseDatabase.instance.reference().child('Pasajeros');
+  final databaseBuses = FirebaseDatabase.instance.reference().child('Buses');
+  final databaseRutas = FirebaseDatabase.instance.reference().child('RutaBusConductor');
+  final databasePagos = FirebaseDatabase.instance.reference().child('Pagos');
+  int _valorPasaje = 1550;
+  String _cajaId = '';
+  String _fecha = '';
+  final f = new DateFormat('yyyy-MM-dd');
 
   ScanResult? _scanResult;
 
@@ -36,6 +46,27 @@ class _TipoPagoState extends State<TipoPago> {
       return EPasajeros.fromMap(value);
     });
   }
+
+  //Obtiene los datos de la bus desde firebase
+  Future<EBuses> getBusData(String placa) async {
+    return await databaseBuses.child(placa)
+        .once()
+        .then((result) {
+      final LinkedHashMap value = result.value;
+      return EBuses.fromMap(value);
+    });
+  }
+  
+  //Obtiene los datos de la ruta desde firebase
+  Future<ERutaBusConductor> getRutaData(String rutaId) async {
+    return await databaseRutas.child(rutaId)
+        .once()
+        .then((result) {
+      final LinkedHashMap value = result.value;
+      return ERutaBusConductor.fromMap(value);
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -68,8 +99,45 @@ class _TipoPagoState extends State<TipoPago> {
                         "Codigo QR",
                         style: TextStyle(color: Colors.white),
                       ),
-                      onPressed: () {
+                      onPressed: () async{
                         _scanCode();
+                        if (_scanResult!.rawContent != null){
+                          User? user = auth.currentUser;
+                          EPasajeros pasajero = await getPasajeroData(user!.uid);
+                          if (pasajero.saldo >= _valorPasaje){
+                            EBuses bus = await getBusData(_scanResult!.rawContent);
+                            ERutaBusConductor ruta = await getRutaData(bus.rutaId);
+                            if (ruta.estado == true){
+                              print(bus.rutaId);
+                              await databaseRutas.child(bus.rutaId).update({'numPasajeros': ruta.numPasajeros + 1});
+                              var orderRef = databasePagos.push();
+                              await orderRef.set({
+                                'fecha': ruta.fecha,
+                                'valor': _valorPasaje,
+                                'rutaId': bus.rutaId,
+                                'pasajeroId': user.uid,
+                              });
+                              await database.child(user.uid).update({
+                                'saldo': pasajero.saldo - _valorPasaje
+                              });
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    content: Text('Pago realizado')),
+                              );
+                            }else{
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    content: Text('Recorrido terminado')),
+                              );
+                            }
+                          }else{
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text('Saldo insuficiente')),
+                            );
+                          }
+
+                        }
                       },
                     ),
                   ),
@@ -110,28 +178,8 @@ class _TipoPagoState extends State<TipoPago> {
       );
       var result = await BarcodeScanner.scan(options: options);
 
-      setState(() async{
+      setState((){
         _scanResult = result;
-        if (_scanResult!.rawContent != null){
-          User? user = auth.currentUser;
-          EPasajeros pasajero = await getPasajeroData(user!.uid);
-          if (pasajero.saldo >= 1550){
-            await database.child(user.uid).update({
-              'saldo': pasajero.saldo - 1550
-            });
-            //aca va para agregar al historial de rutas tomadas
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                  content: Text('Pago realizado')),
-            );
-          }else{
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                  content: Text('Saldo insuficiente')),
-            );
-          }
-
-        }
       } );
     } on PlatformException catch (e) {
       var result = ScanResult(
@@ -146,9 +194,6 @@ class _TipoPagoState extends State<TipoPago> {
       } else {
         result.rawContent = 'Error desconocido: $e';
       }
-      setState(() {
-        _scanResult = result;
-      });
     }
   }
 

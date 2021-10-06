@@ -8,7 +8,7 @@ class EPasajeros {
   String clave;
   int saldo;
   String id_NFC;
-  bool estado_cuenta;
+  bool estado;
 
   EPasajeros({
     required this.nombre,
@@ -20,7 +20,7 @@ class EPasajeros {
     required this.clave,
     required this.saldo,
     required this.id_NFC,
-    required this.estado_cuenta
+    required this.estado
   });
 
   Map<String, Object> toMap(){
@@ -34,7 +34,7 @@ class EPasajeros {
       'clave' : clave,
       'saldo' : saldo,
       'id_NFC' : id_NFC,
-      'estado_cuenta' : estado_cuenta
+      'estado' : estado
     };
   }
 
@@ -49,7 +49,7 @@ class EPasajeros {
         clave: value['clave'],
         saldo: value['saldo'],
         id_NFC: value['id_NFC'],
-        estado_cuenta: value['estado_cuenta']
+        estado: value['estado']
     );
   }
 }

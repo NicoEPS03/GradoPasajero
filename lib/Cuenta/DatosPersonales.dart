@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:proyecto_grado_pasajero/Cuenta/Contrase%C3%B1a.dart';
 import 'package:proyecto_grado_pasajero/Model/EPasajeros.dart';
 import '../constants.dart';
@@ -166,6 +167,9 @@ class _DatosPersonalesState extends State<DatosPersonales> {
                               },
                               maxLength: 10,
                               keyboardType: TextInputType.number,
+                              inputFormatters: <TextInputFormatter>[
+                                WhitelistingTextInputFormatter.digitsOnly
+                              ],
                               decoration: InputDecoration(
                                 suffixIcon: Icon(
                                   Icons.phone,
@@ -225,6 +229,9 @@ class _DatosPersonalesState extends State<DatosPersonales> {
                                 return null;
                               },
                               maxLength: 15,
+                              inputFormatters: <TextInputFormatter>[
+                                WhitelistingTextInputFormatter.digitsOnly
+                              ],
                               decoration: InputDecoration(
                                 suffixIcon: Icon(
                                   Icons.badge,

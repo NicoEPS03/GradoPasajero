@@ -122,12 +122,12 @@ class FooterCuenta extends StatelessWidget {
                                     await database.child(user!.uid).update({
                                       'estado': false,
                                     });
+                                    auth.currentUser!.delete();
                                     Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute<Null>(
                                         builder: (BuildContext context){
                                           return new Login();
                                         })
                                         , (Route<dynamic> route) => false);
-                                    auth.currentUser!.delete();
                                   },
                                   child: const Text('Aceptar'),
                                 ),
