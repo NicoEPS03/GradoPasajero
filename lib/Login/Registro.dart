@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:proyecto_grado_pasajero/Login/Login.dart';
 import 'package:proyecto_grado_pasajero/Model/EPasajeros.dart';
 import '../constants.dart';
@@ -158,6 +159,9 @@ class _RegistroState extends State<Registro> {
                         },
                         maxLength: 10,
                         keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          WhitelistingTextInputFormatter.digitsOnly
+                        ],
                         decoration: InputDecoration(
                           suffixIcon: Icon(
                             Icons.phone,
@@ -227,6 +231,9 @@ class _RegistroState extends State<Registro> {
                           return null;
                         },
                         maxLength: 15,
+                        inputFormatters: <TextInputFormatter>[
+                          WhitelistingTextInputFormatter.digitsOnly
+                        ],
                         decoration: InputDecoration(
                           suffixIcon: Icon(
                             Icons.badge,

@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:proyecto_grado_pasajero/Login/Registro.dart';
 import 'package:proyecto_grado_pasajero/Model/ENFC.dart';
 import 'package:proyecto_grado_pasajero/Model/EPasajeros.dart';
@@ -169,7 +170,11 @@ class _EditarNFCState extends State<EditarNFC> {
                                                     }
                                                     return null;
                                                   },
-                                                  maxLength: 10,
+                                                  maxLength: 15,
+                                                  keyboardType: TextInputType.number,
+                                                  inputFormatters: <TextInputFormatter>[
+                                                    WhitelistingTextInputFormatter.digitsOnly
+                                                  ],
                                                   decoration: InputDecoration(
                                                     hintText: "ID",
                                                     labelText: "Codigo NFC",
@@ -185,8 +190,11 @@ class _EditarNFCState extends State<EditarNFC> {
                                               TextButton(
                                                 onPressed: () async {
                                                   if (_formKey.currentState!.validate()) {
+                                                    ENFC nfc = await getNFC(_codigoController.text);
+                                                    print(nfc);
                                                     try {
                                                       ENFC nfc = await getNFC(_codigoController.text);
+                                                      print(nfc);
                                                       Navigator.pop(context, 'OK');
                                                       User? user = auth.currentUser;
                                                       await database.child(user!.uid).update({
@@ -246,7 +254,11 @@ class _EditarNFCState extends State<EditarNFC> {
                                 }
                                 return null;
                               },
-                              maxLength: 10,
+                              maxLength: 15,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: <TextInputFormatter>[
+                                WhitelistingTextInputFormatter.digitsOnly
+                              ],
                               decoration: InputDecoration(
                                 hintText: "ID",
                                 labelText: "Codigo NFC",

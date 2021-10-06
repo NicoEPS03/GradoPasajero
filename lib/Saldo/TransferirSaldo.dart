@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_progress_button/flutter_progress_button.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:proyecto_grado_pasajero/Login/NavigationDrawerWidget.dart';
@@ -132,6 +133,9 @@ class _TranferirSaldoState extends State<TranferirSaldo> {
                               return null;
                             },
                             keyboardType: TextInputType.number,
+                            inputFormatters: <TextInputFormatter>[
+                              WhitelistingTextInputFormatter.digitsOnly
+                            ],
                             decoration: InputDecoration(
                               suffixIcon: Icon(
                                 Icons.person,
@@ -159,6 +163,9 @@ class _TranferirSaldoState extends State<TranferirSaldo> {
                               return null;
                             },
                             keyboardType: TextInputType.number,
+                            inputFormatters: <TextInputFormatter>[
+                              WhitelistingTextInputFormatter.digitsOnly
+                            ],
                             decoration: InputDecoration(
                               suffixIcon: Icon(
                                 Icons.monetization_on,
