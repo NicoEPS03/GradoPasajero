@@ -5,6 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:proyecto_grado_pasajero/Login/ListaPagos.dart';
 import 'package:proyecto_grado_pasajero/Login/NavigationDrawerWidget.dart';
 import 'package:proyecto_grado_pasajero/Model/EPasajeros.dart';
 import 'package:proyecto_grado_pasajero/Pago/TipoPago.dart';
@@ -32,7 +33,6 @@ class Inicio extends StatelessWidget{
         return EPasajeros.fromMap(value);
       });
     }
-
     User? user = auth.currentUser;
 
     //Asigna los datos del pasajero a las variabla a pasar
@@ -89,8 +89,8 @@ class Inicio extends StatelessWidget{
                 )
               ],
             ),
-            body: SingleChildScrollView(
-                child: Column(
+            body:SingleChildScrollView(
+                  child: Column(
                   children: <Widget>[
                     HeaderInicio(
                         size: size,
@@ -109,9 +109,10 @@ class Inicio extends StatelessWidget{
                         ),
                       ]),
                     ),
+                    ListaPagos(size: size,)
                   ],
                 )
-            ),
+            )
           );
         }
     );

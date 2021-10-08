@@ -1,5 +1,5 @@
 class EPagos{
-  DateTime fecha;
+  String fecha;
   String rutaId;
   String pasajeroId;
   int valor;

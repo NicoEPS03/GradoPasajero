@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:proyecto_grado_pasajero/Model/EBuses.dart';
+import 'package:proyecto_grado_pasajero/Model/ECaja.dart';
 import 'package:proyecto_grado_pasajero/Model/EPasajeros.dart';
 import 'package:proyecto_grado_pasajero/Model/ERutaBusConductor.dart';
 import 'package:proyecto_grado_pasajero/constants.dart';
@@ -22,12 +22,11 @@ class TipoPago extends StatefulWidget {
 class _TipoPagoState extends State<TipoPago> {
   final auth = FirebaseAuth.instance;
   final database = FirebaseDatabase.instance.reference().child('Pasajeros');
-  final databaseBuses = FirebaseDatabase.instance.reference().child('Buses');
+  final databaseCajas = FirebaseDatabase.instance.reference().child('Cajas');
   final databaseRutas = FirebaseDatabase.instance.reference().child('RutaBusConductor');
   final databasePagos = FirebaseDatabase.instance.reference().child('Pagos');
-  int _valorPasaje = 1550;
-  String _cajaId = '';
-  String _fecha = '';
+  final databasePasaje = FirebaseDatabase.instance.reference().child('ValorPasaje');
+  int _valorPasaje = 0;
   final f = new DateFormat('yyyy-MM-dd');
 
   ScanResult? _scanResult;
@@ -39,6 +38,10 @@ class _TipoPagoState extends State<TipoPago> {
 
   //Obtiene los datos del pasajaro desde firebase
   Future<EPasajeros> getPasajeroData(String userId) async {
+    await databasePasaje.once()
+        .then((result) {
+      _valorPasaje = result.value;
+    });
     return await database.child(userId)
         .once()
         .then((result) {
@@ -47,13 +50,13 @@ class _TipoPagoState extends State<TipoPago> {
     });
   }
 
-  //Obtiene los datos de la bus desde firebase
-  Future<EBuses> getBusData(String placa) async {
-    return await databaseBuses.child(placa)
+  //Obtiene los datos de la caja desde firebase
+  Future<ECaja> getCajaData(String placa) async {
+    return await databaseCajas.child(placa)
         .once()
         .then((result) {
       final LinkedHashMap value = result.value;
-      return EBuses.fromMap(value);
+      return ECaja.fromMap(value);
     });
   }
   
@@ -105,16 +108,15 @@ class _TipoPagoState extends State<TipoPago> {
                           User? user = auth.currentUser;
                           EPasajeros pasajero = await getPasajeroData(user!.uid);
                           if (pasajero.saldo >= _valorPasaje){
-                            EBuses bus = await getBusData(_scanResult!.rawContent);
-                            ERutaBusConductor ruta = await getRutaData(bus.rutaId);
+                            ECaja caja = await getCajaData(_scanResult!.rawContent);
+                            ERutaBusConductor ruta = await getRutaData(caja.rutaId);
                             if (ruta.estado == true){
-                              print(bus.rutaId);
-                              await databaseRutas.child(bus.rutaId).update({'numPasajeros': ruta.numPasajeros + 1});
+                              await databaseRutas.child(caja.rutaId).update({'numPasajeros': ruta.numPasajeros + 1});
                               var orderRef = databasePagos.push();
                               await orderRef.set({
                                 'fecha': ruta.fecha,
                                 'valor': _valorPasaje,
-                                'rutaId': bus.rutaId,
+                                'rutaId': caja.rutaId,
                                 'pasajeroId': user.uid,
                               });
                               await database.child(user.uid).update({
@@ -136,7 +138,11 @@ class _TipoPagoState extends State<TipoPago> {
                                   content: Text('Saldo insuficiente')),
                             );
                           }
-
+                        }else{
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text('Error al pagar')),
+                          );
                         }
                       },
                     ),
