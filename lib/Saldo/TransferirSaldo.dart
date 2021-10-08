@@ -128,7 +128,7 @@ class _TranferirSaldoState extends State<TranferirSaldo> {
                             controller: _codigoController,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'El codigo es requerido';
+                                return 'El N. Documento es requerido';
                               }
                               return null;
                             },

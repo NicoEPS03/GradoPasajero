@@ -47,7 +47,6 @@ class _DatosPersonalesState extends State<DatosPersonales> {
     _nombreController.text = pasajero.nombre;
     _apellidoController.text = pasajero.apellido;
     _telefonoController.text = pasajero.telefono;
-    dropdownValue = pasajero.tipo_documento;
     _num_documentoController.text = pasajero.num_documento;
     _correoAnterior = pasajero.correo;
     _correoController.text = pasajero.correo;
@@ -178,38 +177,6 @@ class _DatosPersonalesState extends State<DatosPersonales> {
                                 hintText: "Telefono",
                                 labelText: "Telefono",
                               ),
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                            width: size.width,
-                            decoration: BoxDecoration(
-                              color: Colors.transparent,
-                            ),
-                            child: DropdownButton<String>(
-                              isExpanded: true,
-                              value: dropdownValue,
-                              icon: const Icon(Icons.arrow_downward, color: kPrimaryColor,),
-                              iconSize: 30,
-                              elevation: 16,
-                              style: const TextStyle(color: Colors.black87),
-                              underline: Container(
-                                height: 1,
-                                color: Colors.grey,
-                              ),
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  dropdownValue = newValue!;
-                                });
-                              },
-                              items: <String>['T.I.', 'C.C.', 'C.E.',]
-                                  .map<DropdownMenuItem<String>>((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
                             ),
                           ),
                           Container(

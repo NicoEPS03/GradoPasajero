@@ -170,7 +170,7 @@ class _EditarNFCState extends State<EditarNFC> {
                                                     }
                                                     return null;
                                                   },
-                                                  maxLength: 15,
+                                                  maxLength: 10,
                                                   keyboardType: TextInputType.number,
                                                   inputFormatters: <TextInputFormatter>[
                                                     WhitelistingTextInputFormatter.digitsOnly
@@ -254,7 +254,7 @@ class _EditarNFCState extends State<EditarNFC> {
                                 }
                                 return null;
                               },
-                              maxLength: 15,
+                              maxLength: 10,
                               keyboardType: TextInputType.number,
                               inputFormatters: <TextInputFormatter>[
                                 WhitelistingTextInputFormatter.digitsOnly

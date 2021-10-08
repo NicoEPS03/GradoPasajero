@@ -2,7 +2,6 @@ class EPasajeros {
   String nombre;
   String apellido;
   String telefono;
-  String tipo_documento;
   String num_documento;
   String correo;
   String clave;
@@ -14,7 +13,6 @@ class EPasajeros {
     required this.nombre,
     required this.apellido,
     required this.telefono,
-    required this. tipo_documento,
     required this.num_documento,
     required this.correo,
     required this.clave,
@@ -28,7 +26,6 @@ class EPasajeros {
       'nombre' : nombre,
       'apellido' : apellido,
       'telefono' : telefono,
-      'tipo_documento' : tipo_documento,
       'num_documento' : num_documento,
       'correo' : correo,
       'clave' : clave,
@@ -43,7 +40,6 @@ class EPasajeros {
         nombre: value['nombre'],
         apellido: value['apellido'],
         telefono: value['telefono'],
-        tipo_documento: value['tipo_documento'],
         num_documento: value['num_documento'],
         correo: value['correo'],
         clave: value['clave'],
