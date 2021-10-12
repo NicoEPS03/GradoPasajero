@@ -48,7 +48,6 @@ class ListaPagos extends StatelessWidget{
             value.values.elementAt(i)['rutaId'] = x.nomRuta;
             pagos.add(EPagos.fromMap(value.values.elementAt(i)));
           }
-
         }
         return pagos;
       });
