@@ -6,15 +6,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:proyecto_grado_pasajero/Login/NavigationDrawerWidget.dart';
 import 'package:proyecto_grado_pasajero/Model/EPasajeros.dart';
+import 'package:proyecto_grado_pasajero/constants.dart';
 
-class Rutas extends StatelessWidget{
+class Rutas extends StatefulWidget{
+  @override
+  _RutasState createState() => _RutasState();
+}
+
+class _RutasState extends State<Rutas> {
   final auth = FirebaseAuth.instance;
   final database = FirebaseDatabase.instance.reference().child('Pasajeros');
-  
+
+  String _nombre = '';
+  String dropdownValue = 'R1';
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    String _nombre = '';
 
     //Obtiene los datos del pasajaro desde firebase
     Future<EPasajeros> getPasajeroData(String userId) async {
@@ -32,7 +40,6 @@ class Rutas extends StatelessWidget{
     getPasajero() async{
       EPasajeros pasajero = await getPasajeroData(user!.uid);
       var nombreCompleto = pasajero.nombre;
-      var apellidoCompleto = pasajero.apellido;
       if(nombreCompleto.indexOf(" ") == -1){
         _nombre = pasajero.nombre;
       }else{
@@ -62,7 +69,75 @@ class Rutas extends StatelessWidget{
             body: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  Text('rutas')
+                  SizedBox(height: 20,),
+                  Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 20,
+                      ),
+                      width: size.width,
+                      child: Row(children: [Text('Nombre Ruta')])),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20,
+                    ),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      color: Colors.transparent,
+                    ),
+                    child: DropdownButton<String>(
+                      isExpanded: true,
+                      value: dropdownValue,
+                      icon: const Icon(
+                        Icons.arrow_downward,
+                        color: kPrimaryColor,
+                      ),
+                      iconSize: 30,
+                      elevation: 16,
+                      style:
+                      const TextStyle(color: Colors.black87, fontSize: 15),
+                      underline: Container(
+                        height: 1,
+                        color: Colors.grey,
+                      ),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          dropdownValue = newValue!;
+                        });
+                      },
+                      items: <String>[
+                        'R1',
+                        'R2',
+                        'R3',
+                        'R4',
+                        'R5',
+                        'R6',
+                        'R7',
+                      ].map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                  InteractiveViewer(
+                    child: Stack(
+                      children: [
+                        Hero(
+                          tag: dropdownValue,
+                          child: Image.asset("assets/rutasRecorrido/" + dropdownValue + ".jpg"),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.all(10),
+                    height: size.height/2,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: Image.asset("assets/rutasLista/" + dropdownValue + ".png").image),
+                    ),
+                  ),
                 ],
               ),
             ),

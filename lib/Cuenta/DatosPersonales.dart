@@ -31,6 +31,7 @@ class _DatosPersonalesState extends State<DatosPersonales> {
   final _formKey = GlobalKey<FormState>();
 
   String _correoAnterior = '';
+  String _claveAnterior = '';
 
   //Obtiene los datos del pasajaro desde firebase
   Future<EPasajeros> getPasajeroData(String userId) async {
@@ -41,6 +42,7 @@ class _DatosPersonalesState extends State<DatosPersonales> {
       return EPasajeros.fromMap(value);
     });
   }
+
   //Asigna los datos del pasajero a las variabla a pasar
   getPasajero() async{
     EPasajeros pasajero = await getPasajeroData(auth.currentUser!.uid);
@@ -49,6 +51,7 @@ class _DatosPersonalesState extends State<DatosPersonales> {
     _telefonoController.text = pasajero.telefono;
     _num_documentoController.text = pasajero.num_documento;
     _correoAnterior = pasajero.correo;
+    _claveAnterior = pasajero.clave;
     _correoController.text = pasajero.correo;
   }
 
@@ -252,23 +255,49 @@ class _DatosPersonalesState extends State<DatosPersonales> {
                                 ),
                                 onPressed: () async {
                                   if (_formKey.currentState!.validate()) {
-                                    if (_correoController != _correoAnterior){
-                                      if (user != null){
-                                        await database.child(user.uid).update({
-                                          'nombre': _nombreController.text,
-                                          'apellido': _apellidoController.text,
-                                          'telefono': _telefonoController.text,
-                                          'tipo_documento': dropdownValue,
-                                          'num_documento': _num_documentoController.text
-                                        });
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          const SnackBar(
-                                              content: Text('Información actualizada'),
-                                              duration: Duration(seconds: 6)),
-                                        );
+                                    try {
+                                      await getPasajeroData(_num_documentoController.text);
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content: Text('Documento ya registrado')),
+                                      );
+                                    }catch(e){
+                                      if (_correoController == _correoAnterior){
+                                        if (user != null){
+                                          await database.child(user.uid).update({
+                                            'nombre': _nombreController.text,
+                                            'apellido': _apellidoController.text,
+                                            'telefono': _telefonoController.text,
+                                            'tipo_documento': dropdownValue,
+                                            'num_documento': _num_documentoController.text
+                                          });
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            const SnackBar(
+                                                content: Text('Información actualizada'),
+                                                duration: Duration(seconds: 6)),
+                                          );
+                                        }
+                                      }else{
+                                        if (user != null){
+                                          await auth.signInWithEmailAndPassword(email: _correoAnterior , password: _claveAnterior).
+                                          then((value){
+                                            value.user!.updateEmail(_correoController.text);
+                                          });
+                                          await database.child(user.uid).update({
+                                            'nombre': _nombreController.text,
+                                            'apellido': _apellidoController.text,
+                                            'telefono': _telefonoController.text,
+                                            'tipo_documento': dropdownValue,
+                                            'num_documento': _num_documentoController.text,
+                                            'correo': _correoController.text
+                                          });
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            const SnackBar(
+                                                content: Text('Información actualizada'),
+                                                duration: Duration(seconds: 6)),
+                                          );
+                                        }
                                       }
-                                    }else{
-
                                     }
                                   }
                                 },
