@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
 import 'package:intl/intl.dart';
 import 'package:proyecto_grado_pasajero/Model/ECaja.dart';
 import 'package:proyecto_grado_pasajero/Model/EPasajeros.dart';
@@ -30,6 +32,9 @@ class _TipoPagoState extends State<TipoPago> {
   final f = new DateFormat('yyyy-MM-dd');
 
   ScanResult? _scanResult;
+  NFCTag? _tag;
+
+  String? _result, _writeResult;
 
   static final _possibleFormats = BarcodeFormat.values.toList()
     ..removeWhere((e) => e != BarcodeFormat.qr);
@@ -103,14 +108,17 @@ class _TipoPagoState extends State<TipoPago> {
                         style: TextStyle(color: Colors.white),
                       ),
                       onPressed: () async{
-                        _scanCode();
+                        await _scanCode();
                         if (_scanResult!.rawContent != null){
+                          print(_scanResult!.rawContent);
                           User? user = auth.currentUser;
                           EPasajeros pasajero = await getPasajeroData(user!.uid);
                           if (pasajero.saldo >= _valorPasaje){
+                            print(pasajero.saldo);
                             ECaja caja = await getCajaData(_scanResult!.rawContent);
                             ERutaBusConductor ruta = await getRutaData(caja.rutaId);
                             if (ruta.estado == true){
+                              print(ruta.estado);
                               await databaseRutas.child(caja.rutaId).update({'numPasajeros': ruta.numPasajeros + 1});
                               var orderRef = databasePagos.push();
                               await orderRef.set({
@@ -118,6 +126,7 @@ class _TipoPagoState extends State<TipoPago> {
                                 'valor': _valorPasaje,
                                 'rutaId': caja.rutaId,
                                 'pasajeroId': user.uid,
+                                'tipo': 'Qr'
                               });
                               await database.child(user.uid).update({
                                 'saldo': pasajero.saldo - _valorPasaje
@@ -148,22 +157,6 @@ class _TipoPagoState extends State<TipoPago> {
                     ),
                   ),
                 ),
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 10),
-                  width: size.width * 0.8,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(29),
-                    child: FlatButton(
-                      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-                      color: kPrimaryColor,
-                      child: Text(
-                        "NFC",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      onPressed: () {},
-                    ),
-                  ),
-                ),
               ],
             ),
           ],
@@ -172,6 +165,7 @@ class _TipoPagoState extends State<TipoPago> {
     );
   }
 
+  //Pago por QR
   Future _scanCode() async {
     try {
       var options = ScanOptions(
@@ -208,6 +202,7 @@ class _TipoPagoState extends State<TipoPago> {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<ScanResult>('_scanResult', _scanResult));
   }
+
 }
 
 /*        _   _       __  _   _

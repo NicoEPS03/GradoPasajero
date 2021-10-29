@@ -28,6 +28,7 @@ class _RegistroState extends State<Registro> {
   final _num_documentoController = TextEditingController();
   final _correoController = TextEditingController();
   final _claveController = TextEditingController();
+  final _clave2Controller = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -39,6 +40,7 @@ class _RegistroState extends State<Registro> {
     _num_documentoController.dispose();
     _correoController.dispose();
     _claveController.dispose();
+    _clave2Controller.dispose();
     super.dispose();
   }
 
@@ -281,6 +283,7 @@ class _RegistroState extends State<Registro> {
                       ),
                       child: TextFormField(
                         obscureText: !this.visibility2,
+                        controller: _clave2Controller,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Confirmar contraseña es requerido';
@@ -330,54 +333,60 @@ class _RegistroState extends State<Registro> {
                                       content: Text('Documento ya registrado')),
                                 );
                               } catch (e){
-                                try {
-                                  UserCredential userCredential = await auth.createUserWithEmailAndPassword(
-                                      email: _correoController.text,
-                                      password: _claveController.text
-                                  );
-                                  User? user = auth.currentUser;
-                                  if (user != null){
-                                    user.sendEmailVerification().whenComplete(() => {
-                                      database.child(user.uid).set({
-                                        'nombre': _nombreController.text,
-                                        'apellido': _apellidoController.text,
-                                        'telefono': _telefonoController.text,
-                                        'num_documento': _num_documentoController.text,
-                                        'correo': _correoController.text,
-                                        'clave': _claveController.text,
-                                        'saldo': 0,
-                                        'id_NFC': '',
-                                        'estado': true
-                                      }),
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                            content: Text('Pasajero registrado exitosamente'),
-                                            duration: Duration(seconds: 6)),
-                                      ),
-                                      Navigator.push(context,
-                                          MaterialPageRoute(builder: (context) {
-                                            return Login();
-                                          }))
-                                    });
-                                  }
-                                } on FirebaseAuthException catch (e) {
-                                  if (e.code == 'weak-password') {
-                                    print('The password provided is too weak.');
-                                  } else if (e.code == 'email-already-in-use') {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                          content: Text('Correo ya registrado')),
-                                    );
-                                  }
-                                } catch (e) {
+                                if(_claveController.text != _clave2Controller.text){
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
-                                        content: Text('Problema al crear el pasajero')),
+                                        content: Text('Contraseñas no coinciden')),
                                   );
-                                  print(e);
+                                }else{
+                                  try {
+                                    UserCredential userCredential = await auth.createUserWithEmailAndPassword(
+                                        email: _correoController.text,
+                                        password: _claveController.text
+                                    );
+                                    User? user = auth.currentUser;
+                                    if (user != null){
+                                      user.sendEmailVerification().whenComplete(() => {
+                                        database.child(user.uid).set({
+                                          'nombre': _nombreController.text,
+                                          'apellido': _apellidoController.text,
+                                          'telefono': _telefonoController.text,
+                                          'num_documento': _num_documentoController.text,
+                                          'correo': _correoController.text,
+                                          'clave': _claveController.text,
+                                          'saldo': 0,
+                                          'id_NFC': '',
+                                          'estado': true
+                                        }),
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(
+                                              content: Text('Pasajero registrado exitosamente'),
+                                              duration: Duration(seconds: 6)),
+                                        ),
+                                        Navigator.push(context,
+                                            MaterialPageRoute(builder: (context) {
+                                              return Login();
+                                            }))
+                                      });
+                                    }
+                                  } on FirebaseAuthException catch (e) {
+                                    if (e.code == 'weak-password') {
+                                      print('The password provided is too weak.');
+                                    } else if (e.code == 'email-already-in-use') {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content: Text('Correo ya registrado')),
+                                      );
+                                    }
+                                  } catch (e) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text('Problema al crear el pasajero')),
+                                    );
+                                    print(e);
+                                  }
                                 }
                               }
-
                             }
                           },
                         ),

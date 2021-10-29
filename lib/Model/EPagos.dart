@@ -3,12 +3,14 @@ class EPagos{
   String rutaId;
   String pasajeroId;
   int valor;
+  String tipo;
 
   EPagos({
     required this.fecha,
     required this.rutaId,
     required this.pasajeroId,
-    required this.valor
+    required this.valor,
+    required this.tipo
   });
 
   Map<String, Object> toMap(){
@@ -16,7 +18,8 @@ class EPagos{
       'fecha' : fecha,
       'rutaId' : rutaId,
       'pasajeroId' : pasajeroId,
-      'valor' : valor
+      'valor' : valor,
+      'tipo' : tipo
     };
   }
 
@@ -25,7 +28,8 @@ class EPagos{
         fecha: value['fecha'],
         rutaId: value['rutaId'],
         pasajeroId: value['pasajeroId'],
-        valor: value['valor']
+        valor: value['valor'],
+        tipo: value['tipo']
     );
   }
 }

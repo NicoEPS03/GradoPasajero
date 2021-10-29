@@ -170,7 +170,7 @@ class _EditarNFCState extends State<EditarNFC> {
                                                     }
                                                     return null;
                                                   },
-                                                  maxLength: 10,
+                                                  maxLength: 15,
                                                   keyboardType: TextInputType.number,
                                                   inputFormatters: <TextInputFormatter>[
                                                     WhitelistingTextInputFormatter.digitsOnly
@@ -202,6 +202,7 @@ class _EditarNFCState extends State<EditarNFC> {
                                                         });
                                                       await databaseNFC.child(_codigoController.text).update({
                                                         'bloqueo': false,
+                                                        'estado': true,
                                                         'usuarioId': user.uid,
                                                       });
                                                       setState(() {
@@ -254,7 +255,7 @@ class _EditarNFCState extends State<EditarNFC> {
                                 }
                                 return null;
                               },
-                              maxLength: 10,
+                              maxLength: 15,
                               keyboardType: TextInputType.number,
                               inputFormatters: <TextInputFormatter>[
                                 WhitelistingTextInputFormatter.digitsOnly

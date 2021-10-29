@@ -1,6 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.proyecto_grado_pasajero">
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.NFC" />
+    <uses-feature android:name="android.hardware.nfc" android:required="false" />
+    <uses-feature android:name="android.hardware.nfc.hce" android:required="false" />
+    <uses-permission android:name="android.permission.VIBRATE" />
    <application
         android:label="PTP"
         android:icon="@mipmap/ic_launcher">
