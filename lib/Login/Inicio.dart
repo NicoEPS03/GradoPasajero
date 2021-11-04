@@ -15,6 +15,7 @@ import 'package:proyecto_grado_pasajero/Login/NavigationDrawerWidget.dart';
 import 'package:proyecto_grado_pasajero/Model/ECaja.dart';
 import 'package:proyecto_grado_pasajero/Model/EPasajeros.dart';
 import 'package:proyecto_grado_pasajero/Model/ERutaBusConductor.dart';
+import '../constants.dart';
 import 'HeaderInicio.dart';
 
 
@@ -99,6 +100,7 @@ class _InicioState extends State<Inicio> {
               ),
               appBar: AppBar(
                 elevation: 0,
+                backgroundColor: kPrimaryColor,
                 leading: Builder(
                   builder: (BuildContext context) {
                     return IconButton(
@@ -134,18 +136,16 @@ class _InicioState extends State<Inicio> {
                               'pasajeroId': user.uid,
                               'tipo': 'Qr'
                             });
-                            /*int x = 0;
-                            x = appValueNotifier.ayuda.value;
-                            appValueNotifier.ayuda.value = x - _valorPasaje;*/
                             await database.child(user.uid).update(
                                 {'saldo': pasajero.saldo - _valorPasaje});
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text('Pago realizado')),
                             );
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                                  return Menu();
-                                }));
+                            Future.delayed(const Duration(milliseconds: 500), () {
+                              setState(() {
+                                // Here you can write your code for open new view
+                              });
+                            });
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text('Recorrido terminado')),

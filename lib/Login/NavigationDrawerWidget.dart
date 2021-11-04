@@ -61,7 +61,7 @@ class NavigationDrawerWidget extends StatelessWidget {
                     buildMenuItem(
                       context,
                       item: NavigationItem.tranferirSaldo,
-                      text: 'Tranferir Saldo',
+                      text: 'Transferir Saldo',
                       icon: Icons.money,
                     ),
                     const SizedBox(height: 24),
