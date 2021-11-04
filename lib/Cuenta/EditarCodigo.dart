@@ -85,6 +85,7 @@ class _EditarNFCState extends State<EditarNFC> {
           return Scaffold(
             appBar: AppBar(
               elevation: 0,
+              backgroundColor: kPrimaryColor,
               title: Text('Configuración NFC'),
             ),
             body: SingleChildScrollView(

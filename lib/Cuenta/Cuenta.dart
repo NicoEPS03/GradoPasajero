@@ -8,6 +8,7 @@ import 'package:proyecto_grado_pasajero/Cuenta/DatosPersonales.dart';
 import 'package:proyecto_grado_pasajero/Cuenta/FooterCuenta.dart';
 import 'package:proyecto_grado_pasajero/Login/NavigationDrawerWidget.dart';
 import 'package:proyecto_grado_pasajero/Model/EPasajeros.dart';
+import 'package:proyecto_grado_pasajero/constants.dart';
 import 'HeaderCuenta.dart';
 
 ///Pantalla de configuración de cuenta
@@ -60,6 +61,7 @@ class Cuenta extends StatelessWidget {
             drawer: NavigationDrawerWidget(nombre: _nombre),
             appBar: AppBar(
               elevation: 0,
+              backgroundColor: kPrimaryColor,
               leading: Builder(
                 builder: (BuildContext context) {
                   return IconButton(
