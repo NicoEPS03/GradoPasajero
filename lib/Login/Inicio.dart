@@ -45,7 +45,6 @@ class AppValueNotifier{
         .then((result) {
       final LinkedHashMap value = result.value;
       ayuda.value = value['saldo'];
-      print(ayuda.value);
       return EPasajeros.fromMap(value);
     });
   }

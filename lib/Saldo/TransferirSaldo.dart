@@ -7,10 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_progress_button/flutter_progress_button.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:proyecto_grado_pasajero/Login/NavigationDrawerWidget.dart';
 import 'package:proyecto_grado_pasajero/Model/ENFC.dart';
 import 'package:proyecto_grado_pasajero/Model/EPasajeros.dart';
+import 'package:proyecto_grado_pasajero/Saldo/HistorialTransferencias.dart';
 import 'package:proyecto_grado_pasajero/constants.dart';
+
+final f = new DateFormat('yyyy-MM-dd');
 
 ///Pantalla de transferir saldo
 class TranferirSaldo extends StatefulWidget {
@@ -23,6 +27,7 @@ class _TranferirSaldoState extends State<TranferirSaldo> {
 
   final databasePasajero = FirebaseDatabase.instance.reference().child('Pasajeros');
   final databaseNFC = FirebaseDatabase.instance.reference().child('Nfc');
+  final databaseHistorial = FirebaseDatabase.instance.reference().child('HistorialTranspasos');
 
   final _codigoController = TextEditingController();
   final _cantidadController = TextEditingController();
@@ -98,6 +103,28 @@ class _TranferirSaldoState extends State<TranferirSaldo> {
                   },
                 ),
                 title: Text('Tranferir Saldo'),
+                actions: [
+                  FlatButton(
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                            return HistorialTransferencias();
+                          }));
+                    },
+                    child: Row(
+                      children: [
+                        Text(
+                          'Historial ',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        Icon(
+                          Icons.format_list_bulleted,
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
+                  )
+                ],
               ),
               body: SingleChildScrollView(
                   child: Form(
@@ -199,6 +226,13 @@ class _TranferirSaldoState extends State<TranferirSaldo> {
                                     });
                                     await databasePasajero.child(_idPasarPasajero).update({
                                       'saldo': pasajeroPasar.saldo + int.parse(_cantidadController.text)
+                                    });
+                                    var orderRef = databaseHistorial.push();
+                                    await orderRef.set({
+                                      'fecha': f.format(DateTime.now()),
+                                      'pasajeroOrigenId': user.uid,
+                                      'pasajeroDestinoId': _idPasarPasajero,
+                                      'valor': int.parse(_cantidadController.text),
                                     });
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
