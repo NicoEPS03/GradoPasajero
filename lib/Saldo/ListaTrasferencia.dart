@@ -37,7 +37,7 @@ class ListaTrasnferencia extends StatelessWidget {
         final LinkedHashMap value = result.value;
         for (int i = 0; i < value.values.length; i++) {
           DateTime xfec = DateTime.parse(value.values.elementAt(i)['fecha']);
-          if (xfec.difference(DateTime.now()).inDays > -3) {
+          if (xfec.difference(DateTime.now()).inDays > -90) {
             EPasajeros x = await getPasajeroTraspaso(value.values.elementAt(i)['pasajeroOrigenId']);
             value.values.elementAt(i)['pasajeroOrigenId'] = x.num_documento;
             identidad = x.num_documento;
@@ -59,7 +59,7 @@ class ListaTrasnferencia extends StatelessWidget {
         print(value.values.length);
         for (int i = 0; i < value.values.length; i++) {
           DateTime xfec = DateTime.parse(value.values.elementAt(i)['fecha']);
-          if (xfec.difference(DateTime.now()).inDays > -91) {
+          if (xfec.difference(DateTime.now()).inDays > -90) {
             EPasajeros x = await getPasajeroTraspaso(value.values.elementAt(i)['pasajeroOrigenId']);
             value.values.elementAt(i)['pasajeroOrigenId'] = x.num_documento;
             EPasajeros y = await getPasajeroTraspaso(value.values.elementAt(i)['pasajeroDestinoId']);
